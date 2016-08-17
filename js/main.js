@@ -1,3 +1,8 @@
+var latitude,longitude,description,regionName,country;
+
+
+
+
 $("document").ready(function(){
 	$("getWeather").click(function(){
 		getWeather();
@@ -9,9 +14,9 @@ $("document").ready(function(){
 
 
 
-function setBackground(bg){
+function setBackground(description){
 
-	switch(bg) {
+	switch(description) {
 		case 'Clear': $('body').css('background-image', 'url("http://7-themes.com/data_images/out/56/6961067-beach-scenes-wallpaper.jpg")')
 				  break;
 
@@ -49,8 +54,24 @@ function fetchLocation(){
 		data:{},
 		type: "GET",
 		success: function(data){
-			console.log(data.city);
-			console.log(data.timezone);
+			latitude = data.lat;
+			longitude = data.lon;
+			regionName = data.regionName;
+			country = data.country;
+			fetchWeather();
+		}
+	})
+}
+
+function fetchWeather(){
+	$.ajax({
+		url: 'http://api.openweathermap.org/data/2.5/weather?lat=' + latitude + '&lon=' + longitude + '&APPID=174f9cf2ae710d7e49db0d17c7aa90b6',
+		type: "GET",
+		dataType: "json",
+		data: {},
+		success: function(data){
+			description = data.weather[0].main;
+			setBackground(description);
 		}
 	})
 }
